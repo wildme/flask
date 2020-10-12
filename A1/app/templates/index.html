@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>
+        {% if current_user.is_authenticated %}
+        Hello, {{current_user.firstname}}!
+    </h1>
+<br>
+    <p><a href="{{ url_for('main.outbox_new') }}">New</a></p>
+{% else %}<h1>Hello, Stranger!</h1>{% endif %}
+</div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Recipient</th>
+            <th scope="col">Date</th>
+            <th scope="col">User</th>
+            <th scope="col">Notes</th>
+            <th scope="col">File</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+        <tbody>
+            {% for letter in out_letters %}
+        <tr>
+            <th scope="row">{{letter.id}}</th>
+            <td>{{letter.subject}}</td>
+            <td>{{letter.recipient}}</td>
+            <td>{{letter.reg_date}}</td>
+            <td>{{letter.user_id}}</td>
+            <td>{{letter.notes}}</td>
+            {% if letter.attachment %}
+            <td>
+                <a href="{{ url_for('main.files', f=letter.attachment)}}">
+                    {{letter.attachment}}</a>
+            </td>
+            {% else %}
+            <td>-</td>
+            {% endif %}
+            {%if current_user.id == letter.user_id or current_user.administrator == 1 %}
+            <td><a href="{{ url_for('main.delout', out_id=letter.id)}}">Delete</a>
+            </td>
+            {%endif %}
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
