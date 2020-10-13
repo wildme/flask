@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash
 from flask import current_app, send_from_directory
 from . import main
 from .. import db
-from ..models import Outbox
+from ..models import Outbox, User
 from .forms import OutboxNew
 from flask_login import current_user
 from werkzeug.utils import secure_filename
@@ -11,8 +11,12 @@ from werkzeug.utils import secure_filename
 @main.route('/')
 def index():
     out_letters = Outbox.query.order_by(Outbox.id.desc()).all()
-    
-    return render_template('index.html', out_letters=out_letters)
+    q_users = User.query.all()
+    d_names = {}
+
+    for u in q_users:
+        d_names[u.id] = u.lastname + ' ' + u.firstname
+    return render_template('index.html', out_letters=out_letters, d_names=d_names)
 
 @main.route('/outbox/new', methods=['GET', 'POST'])
 def outbox_new():
