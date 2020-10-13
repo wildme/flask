@@ -6,7 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 
 now = datetime.now()
-dt_str = now.strftime("%y-%d-%m %H:%M:%S")
+dt_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
