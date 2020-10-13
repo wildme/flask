@@ -13,7 +13,6 @@ def index():
     out_letters = Outbox.query.order_by(Outbox.id.desc()).all()
     q_users = User.query.all()
     d_names = {}
-
     for u in q_users:
         d_names[u.id] = u.lastname + ' ' + u.firstname
     return render_template('index.html', out_letters=out_letters, d_names=d_names)
