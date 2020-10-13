@@ -6,7 +6,6 @@ CREATE TABLE users
     lastname VARCHAR(30),
     email VARCHAR(64),
     dep_id TINYINT UNSIGNED,
-    confirmed TINYINT(1),
     CONSTRAINT pk_user PRIMARY KEY (id),
     CONSTRAINT fk_deps_id FOREIGN KEY (dep_id)
     REFERENCES departments (id)
