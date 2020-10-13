@@ -5,8 +5,6 @@ from . import auth
 from .. import db
 from ..models import User
 from .forms import LoginForm, RegistrationForm
-from ..email import send_email
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,37 +30,9 @@ def register():
                 password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        token = user.generate_confirmation_token()
-        send_email(user.email, 'Confirm your account',
-                'auth/email/confirm', user=user, token=token)
-        flash('A confirmation email has been sent to you.')
-        return redirect(url_for('main.index'))
+        flash('You can now login')
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.blueprint != 'auth' \
-            and request.endpoint != 'static':
-                return redirect(url_for('auth.unconfirmed'))
-
-@auth.route('/confirmed')
-def unconfirmed():
-    if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('main.index'))
-    return redirect(url_for('auth.unconfirmed'))
-
-@auth.route('/confirm/<token>')
-@login_required
-def confirm(token):
-    if current_user.confirmed:
-        return redirect(url_for('main.index'))
-    if current_user.confirm(token):
-        db.session.commit()
-        flash('You have confirmed your account. Thanks!')
-    else:
-        flash('The confirmation link in invalid or has expired.')
-    return redirect(url_for('main.index'))
 
 @auth.route('/logout')
 @login_required

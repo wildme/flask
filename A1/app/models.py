@@ -16,29 +16,12 @@ class User(UserMixin, db.Model):
     firstname = db.Column(db.String(30))
     lastname = db.Column(db.String(30))
     email = db.Column(db.String(64))
-    confirmed = db.Column(db.Boolean, default=False)
     administrator = db.Column(db.Boolean)
     dep_id = db.Column(db.SmallInteger, db.ForeignKey('departments.id'))
     outbox = db.relationship('Outbox', backref='out')
 
     def __repr__(self):
         return '<User %r>' % self.login
-
-    def generate_confirmation_token(self, expiration=3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'confirm': self.id}).decode('utf-8')
-
-    def confirm(self, token):
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token.encode('utf-8'))
-        except:
-            return False
-        if data.get('confirm') != self.id:
-            return False
-        self.confirmed = True
-        db.session.add(self)
-        return True
 
     @property
     def password(self):
