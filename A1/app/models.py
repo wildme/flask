@@ -3,10 +3,7 @@ from flask_login import UserMixin
 from flask import current_app
 from . import db, login_manager
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from datetime import datetime
 
-now = datetime.now()
-dt_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -48,7 +45,7 @@ class Outbox(db.Model):
     id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
     subject = db.Column(db.String(256))
     recipient = db.Column(db.String(128))
-    reg_date = db.Column(db.DateTime(), default=dt_str)
+    reg_date = db.Column(db.DateTime())
     user_id = db.Column(db.SmallInteger, db.ForeignKey('users.id'))
     attachment = db.Column(db.String(128))
     notes = db.Column(db.String(256))
