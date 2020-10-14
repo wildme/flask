@@ -43,7 +43,7 @@
             <td>-</td>
             {% endif %}
             {%if current_user.id == letter.user_id or current_user.administrator == 1 %}
-            <td><a href="{{ url_for('main.delout', out_id=letter.id)}}">Delete</a>
+            <td><a href="{{ url_for('main.delout', out_id=letter.id)}}">Delete</a> <a href="{{ url_for('main.editout', out_id=letter.id)}}">Edit</a>
             </td>
             {%endif %}
         </tr>
