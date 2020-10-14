@@ -61,18 +61,23 @@ def delout(out_id):
 def editout(out_id):
     o = Outbox.query.get(out_id)
     form = OutboxEdit()
+    app = current_app._get_current_object()
+    f = form.attachment.data
+
+    if f:
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_DIR'], filename))
     if form.validate_on_submit():
         o.subject=form.subject.data
         o.recipient=form.recipient.data
         o.notes=form.notes.data
-        #o.attachment=form.attachment.data
+        o.attachment=filename
         db.session.commit()
         flash('Letter %s has been updated' % out_id)
         return redirect(url_for('main.index'))
     form.subject.data = o.subject
     form.recipient.data = o.recipient
     form.notes.data = o.notes
-    form.attachment.data = o.attachment
     return render_template('/outbox/edit.html', form=form)
 
 @main.route('/inbox/new', methods=['GET', 'POST'])
