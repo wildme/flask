@@ -93,7 +93,6 @@ def user(user_id):
 @main.route('/user/edit', methods=['GET', 'POST'])
 def edit_user():
     form = UserEdit()
-    #user = User.query.get(user_id)
     if form.validate_on_submit():
         current_user.firstname = form.firstname.data
         current_user.lastname = form.lastname.data
