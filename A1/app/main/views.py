@@ -51,8 +51,10 @@ def files(f):
 
 @main.route('/outbox/<out_id>')
 def delout(out_id):
-    del_item = Outbox.query.filter_by(id=out_id).first() 
-    db.session.delete(del_item)
+    o = Outbox.query.get(out_id) 
+    app = current_app._get_current_object()
+    os.remove(os.path.join(app.config['UPLOAD_DIR'], o.attachment))
+    db.session.delete(o)
     db.session.commit()
     flash('Letter %s has been deleted' % out_id)
     return redirect(url_for('main.index'))
@@ -63,21 +65,24 @@ def editout(out_id):
     form = OutboxEdit()
     app = current_app._get_current_object()
     f = form.attachment.data
-
     if f:
         filename = secure_filename(f.filename)
         f.save(os.path.join(app.config['UPLOAD_DIR'], filename))
+    if o.attachment and f:
+        os.remove(os.path.join(app.config['UPLOAD_DIR'], o.attachment))
     if form.validate_on_submit():
         o.subject=form.subject.data
         o.recipient=form.recipient.data
         o.notes=form.notes.data
-        o.attachment=filename
+        if filename:
+            o.attachment=filename
         db.session.commit()
         flash('Letter %s has been updated' % out_id)
         return redirect(url_for('main.index'))
     form.subject.data = o.subject
     form.recipient.data = o.recipient
     form.notes.data = o.notes
+    form.attachment.data = o.attachment
     return render_template('/outbox/edit.html', form=form)
 
 @main.route('/inbox/new', methods=['GET', 'POST'])
