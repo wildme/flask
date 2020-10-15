@@ -9,7 +9,7 @@ class Config:
     MAIL_PORT = int('25')
     MAIL_USERNAME = 'kostya@gorgaz.ru'
     UPLOAD_DIR = os.path.join(basedir, 'files')
-    ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'doc', 'docx'}
+    ALLOWED_EXT = {'pdf', 'png', 'jpeg', 'jpg', 'doc', 'docx'}
     
     @staticmethod
     def init_app(app):
