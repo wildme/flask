@@ -8,16 +8,10 @@ class OutboxNew(FlaskForm):
     subject = StringField('Subject', validators=[DataRequired(), Length(1, 64)])
     recipient = StringField('Recipient', validators=[DataRequired()])
     attachment = FileField('File', validators=[
-            FileAllowed(['jpg', 'png', 'pdf', 'docx', 'doc'],
+            FileAllowed(['jpg', 'jpeg', 'png', 'pdf', 'docx', 'doc'],
                 'Only jpg, png, PDF, doc(x)')])
     notes = StringField('Notes', validators=[Length(1, 128)])
     submit =  SubmitField('Add')
 
-class OutboxEdit(FlaskForm):
-    subject = StringField('Subject', validators=[DataRequired(), Length(1, 64)])
-    recipient = StringField('Recipient', validators=[DataRequired()])
-    attachment = FileField('File', validators=[
-            FileAllowed(['jpg', 'png', 'pdf', 'docx', 'doc'],
-                'Only jpg, png, PDF, doc(x)')])
-    notes = StringField('Notes', validators=[Length(1, 128)])
+class OutboxEdit(OutboxNew, FlaskForm):
     submit =  SubmitField('Save')
