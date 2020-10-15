@@ -4,7 +4,7 @@ from flask import current_app, send_from_directory
 from . import main
 from .. import db
 from ..models import Outbox, User
-from .forms import OutboxNew, OutboxEdit
+from .forms import OutboxNew, OutboxEdit, UserEdit
 from flask_login import current_user
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -84,6 +84,27 @@ def editout(out_id):
     form.notes.data = o.notes
     form.attachment.data = o.attachment
     return render_template('/outbox/edit.html', form=form)
+
+@main.route('/user/<user_id>')
+def user(user_id):
+    user = User.query.get(user_id)
+    return render_template('user.html', user=user)
+
+@main.route('/user/edit', methods=['GET', 'POST'])
+def edit_user():
+    form = UserEdit()
+    #user = User.query.get(user_id)
+    if form.validate_on_submit():
+        current_user.firstname = form.firstname.data
+        current_user.lastname = form.lastname.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your profile has been updated')
+        return redirect(url_for('.user', user_id=current_user.id))
+    form.firstname.data = current_user.firstname
+    form.lastname.data = current_user.lastname
+    form.email.data = current_user.email
+    return render_template('user_edit.html', form=form)
 
 @main.route('/inbox/new', methods=['GET', 'POST'])
 def inbox_new():
