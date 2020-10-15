@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}A1 - {{user.firstname }} {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ user.firstname }}</h1>
+    <p><b>First name:</b> {{ user.firstname }}</p>
+    <p><b>Last name:</b> {{ user.lastname }}</p>
+    <p><b>Email:</b> <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+    {% if user == current_user %}
+    <a class="btn btn-default" href="{{ url_for('.edit_user') }}"> Edit Profile</a>
+    {% endif %}
+</div>
+{% endblock %}
