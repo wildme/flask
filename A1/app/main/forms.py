@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, FileField
+from wtforms import PasswordField
 from flask_wtf.file import FileRequired, FileAllowed
-from wtforms.validators import DataRequired, Length, Email, Regexp
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
+from wtforms import ValidationError
 from ..models import Outbox, User
 
 class UserEdit(FlaskForm):
@@ -11,9 +13,17 @@ class UserEdit(FlaskForm):
     lastname = StringField('Lastname',
             validators=[DataRequired(), Length(1, 64),
                 Regexp('^[A-Za-z]*$', 0, 'only letters allowed')])
-    email = StringField('Email',
-            validators=[DataRequired(), Length(1, 64), Email()])
     submit =  SubmitField('Save')
+
+class ChangePass(FlaskForm):
+    passwordOld = PasswordField('Password',
+            validators=[DataRequired()]) 
+    passwordNew = PasswordField('New password',
+            validators=[DataRequired(), EqualTo('passwordNew2', 
+                message='Passwords must match.')])
+    passwordNew2 = PasswordField('Confirm password',
+            validators=[DataRequired()])
+    submit =  SubmitField('Change')
 
 class OutboxNew(FlaskForm):
     subject = StringField('Subject', validators=[DataRequired(), Length(1, 64)])
