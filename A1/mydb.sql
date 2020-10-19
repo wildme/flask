@@ -27,6 +27,25 @@ CREATE TABLE outbox
     attachment VARCHAR(128),
     CONSTRAINT pk_outbox PRIMARY KEY (id)
 );
+-- TABLE: inbox
+CREATE TABLE inbox
+(id TINYINT UNSIGNED AUTO_INCREMENT,
+    subject VARCHAR(256),
+    reg_date DATETIME,
+    sender VARCHAR(128),
+    user_id TINYINT UNSIGNED,
+    notes VARCHAR(256),
+    attachment VARCHAR(128),
+    CONSTRAINT pk_inbox PRIMARY KEY (id)
+);
+-- TABLE: contacts
+CREATE TABLE contacts
+(id TINYINT UNSIGNED AUTO_INCREMENT,
+    location VARCHAR(128),
+    name VARCHAR(128),
+    CONSTRAINT pk_contacts PRIMARY KEY (id)
+);
+
 -- FOREIGN KEYS
 -- Reference: fk_deps_id table: users
 ALTER TABLE users ADD CONSTRAINT fk_deps_id
@@ -36,5 +55,10 @@ ALTER TABLE users ADD CONSTRAINT fk_deps_id
 ALTER TABLE outbox ADD CONSTRAINT fk_users_id
     FOREIGN KEY (user_id)
     REFERENCES users (id);
+-- Reference: fk_users_id table: inbox
+ALTER TABLE inbox ADD CONSTRAINT fk_users_id_in
+    FOREIGN KEY (user_id)
+    REFERENCES users (id);
+
 -- INSERT VALUES
 INSERT INTO users (login, firstname, lastname, administrator, email) VALUES ('admin', 'Admin', 'Admin', 1, "admin@example.com");  
