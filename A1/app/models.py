@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     administrator = db.Column(db.Boolean)
     dep_id = db.Column(db.SmallInteger, db.ForeignKey('departments.id'))
     outbox = db.relationship('Outbox', backref='out')
+    inbox = db.relationship('Inbox', backref='in')
 
     def __repr__(self):
         return '<User %r>' % self.login
@@ -40,11 +41,33 @@ class Departments(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
+class Contacts(db.Model):
+    __tablename__ = 'contacts'
+    id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(128))
+    location = db.Column(db.String(128))
+    
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
 class Outbox(db.Model):
     __tablename__ = 'outbox'
     id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
     subject = db.Column(db.String(256))
     recipient = db.Column(db.String(128))
+    reg_date = db.Column(db.DateTime())
+    user_id = db.Column(db.SmallInteger, db.ForeignKey('users.id'))
+    attachment = db.Column(db.String(128))
+    notes = db.Column(db.String(256))
+
+    def __repr__(self):
+        return '<Name %r>' % self.subject
+
+class Inbox(db.Model):
+    __tablename__ = 'inbox'
+    id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
+    subject = db.Column(db.String(256))
+    sender = db.Column(db.String(128))
     reg_date = db.Column(db.DateTime())
     user_id = db.Column(db.SmallInteger, db.ForeignKey('users.id'))
     attachment = db.Column(db.String(128))
