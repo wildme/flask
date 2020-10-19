@@ -4,7 +4,7 @@ from wtforms import PasswordField
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
-from ..models import Outbox, User
+from ..models import Outbox, User, Inbox, Contacts
 
 class UserEdit(FlaskForm):
     firstname = StringField('Firstname',
@@ -36,3 +36,20 @@ class OutboxNew(FlaskForm):
 
 class OutboxEdit(OutboxNew, FlaskForm):
     submit =  SubmitField('Save')
+
+class InboxNew(FlaskForm):
+    subject = StringField('Subject', validators=[DataRequired(), Length(1, 64)])
+    sender = StringField('Sender', validators=[DataRequired()])
+    attachment = FileField('File', validators=[
+            FileAllowed(['jpg', 'jpeg', 'png', 'pdf', 'docx', 'doc'],
+                'Only jpg, png, PDF, doc(x)')])
+    notes = StringField('Notes', validators=[Length(1, 128)])
+    submit =  SubmitField('Add')
+class InboxEdit(InboxNew, FlaskForm):
+    submit =  SubmitField('Save')
+
+class ContactsNew(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 64)])
+    location = StringField('Location', validators=[DataRequired(), Length(1, 64)])
+
+    submit =  SubmitField('+')
