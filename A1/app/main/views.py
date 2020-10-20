@@ -22,7 +22,7 @@ def index():
 @main.route('/contacts', methods=['GET', 'POST'])
 def contacts():
     form = ContactsNew()
-    all_con = Contacts.query.order_by(Contacts.id.desc()).all()
+    all_con = Contacts.query.order_by(Contacts.name.asc()).all()
     if form.validate_on_submit():
         contact = Contacts(name=form.name.data,
                 location = form.location.data)
@@ -46,6 +46,7 @@ def inbox():
 def outbox_new():
     form = OutboxNew()
     app = current_app._get_current_object()
+    #form.recipient.choices = [(c.name) for c in Contacts.query.order_by('name')]
     now = datetime.now()
     dt_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -79,7 +80,8 @@ def files(f):
 def delout(out_id):
     o = Outbox.query.get(out_id) 
     app = current_app._get_current_object()
-    os.remove(os.path.join(app.config['UPLOAD_DIR'], o.attachment))
+    if o.attachment:
+        os.remove(os.path.join(app.config['UPLOAD_DIR'], o.attachment))
     db.session.delete(o)
     db.session.commit()
     flash('Letter %s has been deleted' % out_id)
@@ -214,5 +216,3 @@ def editin(in_id):
     form.notes.data = i.notes
     form.attachment.data = i.attachment
     return render_template('/inbox/edit.html', form=form)
-
-
