@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, FileField
-from wtforms import PasswordField
+from wtforms import PasswordField, SelectField
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -28,6 +28,7 @@ class ChangePass(FlaskForm):
 class OutboxNew(FlaskForm):
     subject = StringField('Subject', validators=[DataRequired(), Length(1, 64)])
     recipient = StringField('Recipient', validators=[DataRequired()])
+    #recipient = SelectField('Recipient', default=None, validate_choice=False) 
     attachment = FileField('File', validators=[
             FileAllowed(['jpg', 'jpeg', 'png', 'pdf', 'docx', 'doc'],
                 'Only jpg, png, PDF, doc(x)')])
