@@ -10,6 +10,7 @@ class Config:
     MAIL_USERNAME = 'kostya@gorgaz.ru'
     UPLOAD_DIR = os.path.join(basedir, 'files')
     ALLOWED_EXT = {'pdf', 'png', 'jpeg', 'jpg', 'doc', 'docx'}
+    POSTS_PER_PAGE = int('30')
     
     @staticmethod
     def init_app(app):
