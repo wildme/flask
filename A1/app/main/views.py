@@ -1,6 +1,6 @@
 import os
 from flask import render_template, redirect, url_for, flash
-from flask import current_app, send_from_directory
+from flask import current_app, send_from_directory, request
 from . import main
 from .. import db
 from ..models import Outbox, Inbox, User, Contacts
@@ -12,12 +12,17 @@ from datetime import datetime
 
 @main.route('/')
 def index():
-    out_letters = Outbox.query.order_by(Outbox.id.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = Outbox.query.order_by(Outbox.id.desc()).paginate(
+            page, per_page=current_app.config['RECORDS_PER_PAGE'],
+            error_out=False)
+    out_letters = pagination.items
     q_users = User.query.all()
     d_names = {}
     for u in q_users:
         d_names[u.id] = u.lastname + ' ' + u.firstname
-    return render_template('index.html', out_letters=out_letters, d_names=d_names)
+    return render_template('index.html', out_letters=out_letters,
+            d_names=d_names, pagination=pagination)
 
 @main.route('/contacts', methods=['GET', 'POST'])
 def contacts():
@@ -34,12 +39,17 @@ def contacts():
 
 @main.route('/inbox')
 def inbox():
-    in_letters = Inbox.query.order_by(Inbox.id.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = Inbox.query.order_by(Inbox.id.desc()).paginate(
+            page, per_page=current_app.config['RECORDS_PER_PAGE'],
+            error_out=False)
+    in_letters = pagination.items
     q_users = User.query.all()
     d_names = {}
     for u in q_users:
         d_names[u.id] = u.lastname + ' ' + u.firstname
-    return render_template('/inbox/index.html', in_letters=in_letters, d_names=d_names)
+    return render_template('/inbox/index.html', in_letters=in_letters,
+            d_names=d_names, pagination=pagination)
 
 @main.route('/outbox/new', methods=['GET', 'POST'])
 @login_required
