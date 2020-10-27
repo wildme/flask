@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}A1{% endblock %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Stamp{% endblock %}
 {% block page_content %}
 <div class="page-header">
 {% if current_user.is_authenticated %}
@@ -8,6 +10,11 @@
 <p><a href="{{ url_for('main.inbox_new') }}">New</a></p>
 </div>
 {% include "/inbox/_in_letters.html" %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.inbox') }}
+</div>
+{% endif %}
 {% else %}
 <h1>Hello, Stranger!</h1>
 {% endif %}

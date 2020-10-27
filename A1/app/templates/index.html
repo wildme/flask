@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}A1{% endblock %}
+{% block title %}Stamp{% endblock %}
 {% block page_content %}
 <div class="page-header">
     
@@ -12,6 +11,11 @@
 <p><a href="{{ url_for('main.outbox_new') }}">New</a></p>
 </div>
 {% include "/outbox/_out_letters.html" %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
 {% else %}
 <h1>Hello, Stranger!</h1>
 {% endif %}
