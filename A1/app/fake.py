@@ -6,17 +6,16 @@ from .models import Outbox, User
 from datetime import datetime
 
 def letters(count=50):
-    now = datetime.now()
-    dt_str = now.strftime('%Y-%m-%d %H:%M:%S')
     u = User.query.filter_by(login='kostya').first()
     fake = Faker()
     i = 0
     while i < count:
-        o = Outbox(subject=fake.text(),
+        o = Outbox(subject=fake.text(max_nb_chars=20),
                 user_id = u.id,
-                reg_date = dt_str,
+                reg_date = fake.date_time_between(start_date='-3y',
+                    end_date='now', tzinfo=None),
                 recipient=fake.name(),
-                notes=fake.text())
+                notes=fake.text(max_nb_chars=20))
         db.session.add(o)
         try:
             db.session.commit()
