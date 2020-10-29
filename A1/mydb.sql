@@ -19,6 +19,7 @@ CREATE TABLE departments
 -- TABLE: outbox
 CREATE TABLE outbox
 (id TINYINT UNSIGNED AUTO_INCREMENT,
+    num SMALLINT UNSIGNED,
     subject VARCHAR(256),
     reg_date DATETIME,
     recipient VARCHAR(128),
@@ -30,6 +31,7 @@ CREATE TABLE outbox
 -- TABLE: inbox
 CREATE TABLE inbox
 (id TINYINT UNSIGNED AUTO_INCREMENT,
+    num SMALLINT UNSIGNED,
     subject VARCHAR(256),
     reg_date DATETIME,
     sender VARCHAR(128),

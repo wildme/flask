@@ -53,6 +53,7 @@ class Contacts(db.Model):
 class Outbox(db.Model):
     __tablename__ = 'outbox'
     id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
+    num = db.Column(db.SmallInteger)
     subject = db.Column(db.String(256))
     recipient = db.Column(db.String(128))
     reg_date = db.Column(db.DateTime())
@@ -66,6 +67,7 @@ class Outbox(db.Model):
 class Inbox(db.Model):
     __tablename__ = 'inbox'
     id = db.Column(db.SmallInteger, primary_key=True, autoincrement=True)
+    num = db.Column(db.SmallInteger)
     subject = db.Column(db.String(256))
     sender = db.Column(db.String(128))
     reg_date = db.Column(db.DateTime())
