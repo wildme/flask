@@ -9,6 +9,7 @@ from .forms import InboxNew, InboxEdit, ContactsNew
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from sqlalchemy import extract
 
 @main.route('/')
 def index():
@@ -59,6 +60,10 @@ def outbox_new():
     #form.recipient.choices = [(c.name) for c in Contacts.query.order_by('name')]
     now = datetime.now()
     dt_str = now.strftime('%Y-%m-%d %H:%M:%S')
+    year = datetime.today().year
+    total_num = Outbox.query.filter(extract('year',
+        Outbox.reg_date) == year).count()
+    next_num = total_num + 1
 
     f = form.attachment.data
     if f:
@@ -68,6 +73,7 @@ def outbox_new():
         filename = None
     if form.validate_on_submit():
         outbox = Outbox(subject=form.subject.data,
+                num = next_num,
                 user_id = current_user.id,
                 recipient=form.recipient.data,
                 attachment=filename,
