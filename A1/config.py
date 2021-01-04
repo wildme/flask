@@ -17,7 +17,7 @@ class Config:
         pass
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/myapp'
+    SQLALCHEMY_DATABASE_URI = 'mysql://stamp:123456@localhost/myapp'
 
 
 config = {
